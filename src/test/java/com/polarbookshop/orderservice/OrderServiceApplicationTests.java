@@ -31,7 +31,7 @@ class OrderServiceApplicationTests {
 
   @Container
   static PostgreSQLContainer<?> postgresql = new PostgreSQLContainer<>(
-    DockerImageName.parse("postgres:15.3")
+    DockerImageName.parse("postgres:15.4")
   );
 
 	@Autowired
