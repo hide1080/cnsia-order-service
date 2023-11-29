@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,6 +16,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+@TestMethodOrder(MethodOrderer.Random.class)
 class BookClientTests {
 
   private MockWebServer mockWebServer;

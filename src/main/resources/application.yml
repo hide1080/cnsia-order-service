@@ -11,6 +11,37 @@ server:
 spring:
   application:
     name: order-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+      request-connect-timeout: 5000 # 5s
+      request-read-timeout: 5000 # 5s
+      fail-fast: false # In production, set to true
+      retry:
+        max-attempts: 6
+        initial-interval: 1000 # 1s
+        max-interval: 2000 # 2s
+        multiplier: 1.1
+    function:
+      definition: dispatchOrder
+    stream:
+      bindings:
+        dispatchOrder-in-0:
+          destination: order-dispatched
+          group: ${spring.application.name}
+        acceptOrder-out-0:
+          destination: order-accepted
+      rabbit:
+        bindings:
+          acceptOrder-out-0:
+            producer:
+              transacted: true
+  config:
+    import: "optional:configserver:"
+  flyway:
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+    url: jdbc:postgresql://localhost:5432/polardb_order
   lifecycle:
     timeout-per-shutdown-phase: 15s
   r2dbc:
@@ -21,7 +52,9 @@ spring:
       max-create-connection-time: 2s
       initial-size: 5
       max-size: 10
-  flyway:
-    user: ${spring.r2dbc.username}
-    password: ${spring.r2dbc.password}
-    url: jdbc:postgresql://localhost:5432/polardb_order
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    connection-timeout: 5s
