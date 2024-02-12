@@ -23,27 +23,28 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2021.0.8")
-	set('testcontainersVersion', "1.18.3")
+	set('testcontainersVersion', "1.19.3")
+	set('testKeycloakVersion', "3.2.0")
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 	implementation 'org.springframework.retry:spring-retry'
+
 	runtimeOnly 'org.flywaydb:flyway-core'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'org.postgresql:r2dbc-postgresql'
 	runtimeOnly 'org.springframework:spring-jdbc'
+
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	testImplementation 'io.projectreactor:reactor-test'
-	testImplementation 'org.testcontainers:junit-jupiter'
-	testImplementation 'org.testcontainers:postgresql'
-	testImplementation 'org.testcontainers:r2dbc'
-	testImplementation('com.squareup.okhttp3:mockwebserver')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation("org.springframework.cloud:spring-cloud-stream") {
 		artifact {
 			name = "spring-cloud-stream"
@@ -52,6 +53,12 @@ dependencies {
 			classifier = "test-binder"
 		}
 	}
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+	testImplementation 'org.testcontainers:r2dbc'
+	testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
+	testImplementation 'com.squareup.okhttp3:mockwebserver'
 }
 
 dependencyManagement {
@@ -77,3 +84,7 @@ bootBuildImage {
 		}
 	}
 }
+
+// test {
+//     testLogging.showStandardStreams = true
+// }

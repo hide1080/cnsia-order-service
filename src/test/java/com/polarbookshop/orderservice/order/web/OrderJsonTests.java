@@ -31,6 +31,8 @@ class OrderJsonTests {
       OrderStatus.ACCEPTED,
       Instant.now(),
       Instant.now(),
+      "test1",
+      "test2",
       21
     );
 
@@ -59,6 +61,10 @@ class OrderJsonTests {
     assertThat(jsonContent)
       .extractingJsonPathStringValue("@.lastModifiedDate")
       .isEqualTo(order.lastModifiedDate().toString());
+    assertThat(jsonContent).extractingJsonPathStringValue("@.createdBy")
+      .isEqualTo(order.createdBy());
+    assertThat(jsonContent).extractingJsonPathStringValue("@.lastModifiedBy")
+      .isEqualTo(order.lastModifiedBy());
     assertThat(jsonContent)
       .extractingJsonPathNumberValue("@.version")
       .isEqualTo(order.version());
