@@ -6,10 +6,9 @@ plugins {
 
 group = 'com.polarbookshop'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
-java {
-	sourceCompatibility = '17'
-}
+description = 'Provides functionality for purchasing books.'
 
 configurations {
 	compileOnly {
@@ -22,12 +21,14 @@ repositories {
 }
 
 ext {
+	set('otelVersion', "1.32.0")
 	set('springCloudVersion', "2021.0.8")
 	set('testcontainersVersion', "1.19.3")
 	set('testKeycloakVersion', "3.2.0")
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -36,10 +37,15 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 	implementation 'org.springframework.retry:spring-retry'
 
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
 	runtimeOnly 'org.flywaydb:flyway-core'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'org.postgresql:r2dbc-postgresql'
 	runtimeOnly 'org.springframework:spring-jdbc'
+
+	// Only on Apple Silicon. Why it's necessary: https://github.com/netty/netty/issues/11020
+	// runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.101.Final:osx-aarch_64'
 
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
@@ -68,11 +74,12 @@ dependencyManagement {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+springBoot {
+	buildInfo()
 }
 
 bootBuildImage {
+	builder = "docker.io/paketobuildpacks/builder-jammy-base"
 	imageName = "${project.name}"
 	environment = ["BP_JVM_VERION" : "17.*"]
 
@@ -85,6 +92,6 @@ bootBuildImage {
 	}
 }
 
-// test {
-//     testLogging.showStandardStreams = true
-// }
+tasks.named('test') {
+	useJUnitPlatform()
+}

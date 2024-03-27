@@ -13,11 +13,10 @@ public class SecurityConfig {
   SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
     return http
       .authorizeExchange(authrize -> authrize
+        .pathMatchers("/actuator/**").permitAll()
         .anyExchange().authenticated()
       )
-      .oauth2ResourceServer(
-        ServerHttpSecurity.OAuth2ResourceServerSpec::jwt
-      )
+      .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt)
       .requestCache(requestCacheSpec -> requestCacheSpec
         .requestCache(NoOpServerRequestCache.getInstance())
       )
