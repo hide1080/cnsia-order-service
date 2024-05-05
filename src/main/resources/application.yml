@@ -25,6 +25,7 @@ spring:
     name: order-service
   cloud:
     config:
+      enabled: false
       uri: http://localhost:8888
       request-connect-timeout: 5000 # 5s
       request-read-timeout: 5000 # 5s
@@ -49,7 +50,7 @@ spring:
             producer:
               transacted: true
   config:
-    import: "optional:configserver:"
+    import: "" # "optional:configserver:"
   flyway:
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
