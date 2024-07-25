@@ -1,2 +1,2 @@
 # cnsia-order-service
-「Cloud Native Spring in Action」の読書記録。オーダーサービス
+書籍「Cloud Native Spring in Action」の order-service
